@@ -45,7 +45,7 @@ public class BinarySearch<T extends Comparable<T>> implements Runnable {
         int index = binarySearch(list,target);
         endTime = System.currentTimeMillis();
         executionTime = endTime - startTime;
-        System.out.println(Thread.currentThread().getName()+":Searched "+index+" completed in "+executionTime+" ms\n");
+        System.out.println(Thread.currentThread().getName()+":File "+index+" found in "+executionTime+" ms\n");
     }
 
     public List<T> getList() {

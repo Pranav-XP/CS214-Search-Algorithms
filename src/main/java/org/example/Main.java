@@ -47,15 +47,15 @@ public class Main {
         BinarySearch<Article> BSA= new BinarySearch<>(articleArrayList);
         BinarySearch<Article> BSL = new BinarySearch<>(articleLinkedList);
 
-        InterpolationSearch<Article> ISA = new InterpolationSearch<>(articleArrayList,new Article(197));
+        InterpolationSearch<Article> ISA = new InterpolationSearch<>(articleArrayList);
         InterpolationSearch<Article> ISL = new InterpolationSearch<>(articleLinkedList);
 
-        System.out.println(articleArrayList.get(ISA.interpolationSearch(articleArrayList,new Article(197))));
+        System.out.println(articleArrayList.get(ISA.interpolationSearch(articleArrayList,new Article(2000))));
         System.out.println();
 
 
         //TODO: IMPLEMENT BELOW AS FUNCTIONS
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 30; i++) {
             LSA.setTarget(new Article(generateRandomKey(articleArrayList.size())));
             LSL.setTarget(new Article(generateRandomKey(articleLinkedList.size())));
 

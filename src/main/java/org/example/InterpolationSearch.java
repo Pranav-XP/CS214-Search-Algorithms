@@ -24,51 +24,18 @@ public class InterpolationSearch<T extends Comparable<T>> implements Runnable {
     public void run() {
 
     }
-
     public int interpolationSearch(List<T> list, T target) {
-        int pos;
+
         int left = 0;
         int right = list.size() - 1;
-
+        int pos;
         if(left<=right && target.compareTo(list.get(left))>=0 && target.compareTo(list.get(right))<=0){
-            pos = left + (right - left)*(target.compareTo(list.get(left))/list.get(right).compareTo(list.get(left)));
-
-            if(right == left){
-                if (list.get(left).compareTo(target)==0){
-                    return left;
-                }else{
-                    return -1;
-                }
-            }
-
-            if(list.get(pos).compareTo(target)==0){
-                return pos;
-            }
-
-            if(list.get(pos).compareTo(target)<0){
-                left = pos+1;
-            }else{
-                right = pos - 1;
-            }
+            pos = left + (((right - left) / (list.get(right).compareTo(list.get(left)))) * (target.compareTo(list.get(left))));
+            return pos;
+        }else {
+            return -1;
         }
-
-        /*while (left <= right && target.compareTo(list.get(left)) >= 0 && target.compareTo(list.get(right)) <= 0) {
-            pos = left + (((right - left) * (target.compareTo(list.get(left)))) / (list.get(right).compareTo(list.get(left))));
-
-            if (list.get(pos).equals(target)) {
-                return pos;
-            }
-
-            if (target.compareTo(list.get(pos)) < 0) {
-                right = pos - 1;
-            } else {
-                left = pos + 1;
-            }
-        }*/
-
-        return -1; // Element not found
     }
-
 
     public List<T> getList() {
         return list;
