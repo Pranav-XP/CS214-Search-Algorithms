@@ -47,6 +47,11 @@ public class Main {
         BinarySearch<Article> BSA= new BinarySearch<>(articleArrayList);
         BinarySearch<Article> BSL = new BinarySearch<>(articleLinkedList);
 
+        InterpolationSearch<Article> ISA = new InterpolationSearch<>(articleArrayList,new Article(197));
+        InterpolationSearch<Article> ISL = new InterpolationSearch<>(articleLinkedList);
+
+        System.out.println(articleArrayList.get(ISA.interpolationSearch(articleArrayList,new Article(197))));
+        System.out.println();
 
 
         //TODO: IMPLEMENT BELOW AS FUNCTIONS

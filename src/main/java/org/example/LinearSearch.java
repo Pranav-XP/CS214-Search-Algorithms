@@ -30,7 +30,7 @@ public class LinearSearch<T extends Comparable<T>> implements Runnable{
     }
 
     //Generic Linear Search algorithm which searches for any User define datatype for both linked list and array list
-    public <T extends Comparable<T>> int linearSearch(List<T> list,T target){
+    public int linearSearch(List<T> list,T target){
         counter = 0;
         for(int i = 0; i< list.size();i++){
             counter++;
