@@ -22,19 +22,35 @@ public class InterpolationSearch<T extends Comparable<T>> implements Runnable {
 
     @Override
     public void run() {
-
+        startTime=System.currentTimeMillis();
+        int index =interpolationSearch(list,target);
+        endTime=System.currentTimeMillis();
+        executionTime=endTime-startTime;
+        System.out.println(Thread.currentThread().getName()+":File "+index+" found in "+executionTime+" ms\n");
     }
+
+    //Interpolation Search Algorithm
     public int interpolationSearch(List<T> list, T target) {
 
         int left = 0;
         int right = list.size() - 1;
         int pos;
         if(left<=right && target.compareTo(list.get(left))>=0 && target.compareTo(list.get(right))<=0){
+
+            //Probing the array which is uniformly distributed
             pos = left + (((right - left) / (list.get(right).compareTo(list.get(left)))) * (target.compareTo(list.get(left))));
-            return pos;
-        }else {
-            return -1;
+
+            if (list.get(pos) == target){
+                return pos;
+            }/*else if (list.get(pos).compareTo(target) < 0) {
+                left = pos + 1;
+            } else {
+                right = pos - 1;
+            }*/
+
         }
+        return -1; //element not found
+
     }
 
     public List<T> getList() {

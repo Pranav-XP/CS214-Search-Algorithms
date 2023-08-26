@@ -19,6 +19,7 @@ public class BinarySearch<T extends Comparable<T>> implements Runnable {
         this.target = target;
     }
 
+    //Iterative Binary Search Algorithm
     public int binarySearch(List<T> list, T key) {
         int left = 0;
         int right = list.size() - 1;

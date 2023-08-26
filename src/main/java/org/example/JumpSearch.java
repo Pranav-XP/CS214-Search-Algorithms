@@ -24,6 +24,8 @@ public class JumpSearch<T> implements Runnable{
         System.out.println(Thread.currentThread().getName()+ " completed\n");
     }
 
+    //JumpSearch Algorithm
+
     public List<T> getList() {
         return list;
     }
