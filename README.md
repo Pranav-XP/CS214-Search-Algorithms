@@ -26,7 +26,10 @@ Two multithread functions are implemented, for empirical analysis and for worst 
 Reads execution time for each algorithm and outputs the best, worst and average time.
 4. **Read File**<br>
 CSV file is read using OpenCSV library. A Custom Parser is implemented using ParserBuilder() and the files are read into Array List and Linked List.
+<br>
 
+### MATLAB Engine API
+Matlab Engine API is used to handle graphing aspect. A line graph of Number of Operations vs Input Size is plotted under Algorithm Worst Case condition.
 
 ### How to run?
 Simply run the Main.java class to run all algorithms, analysis and graphing, which has all been automated.

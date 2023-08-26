@@ -1,7 +1,7 @@
 /*GROUP MEMBERS
 * S11171153 Pranav Chand
-* Chen
-* Aryan
+* S11209162 Pui Chen
+* S11210082 Aryan Sharma
 * */
 
 package org.example;
@@ -17,7 +17,6 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 public class Main {
-    private static MatlabEngine eng;
     public static void main(String[] args) {
         String filePath = Objects.requireNonNull(Main.class.getClassLoader().getResource("Article.csv")).getPath();
         System.out.println(filePath);
@@ -73,7 +72,7 @@ public class Main {
 
         //Start MATLAB ENGINE API
         try {
-            eng = MatlabEngine.startMatlab();
+            MatlabEngine eng = MatlabEngine.startMatlab();
 
             //Pass Data to MATLAB and plot Line Charts
             eng.putVariable("x",x);
