@@ -101,6 +101,10 @@ public class Article implements Comparable<Article> {
 
     @Override
     public int compareTo(Article o) {
+        //Compares IDx vs IDy, whereby IDy is o.id
+        //Returns 0 if IDx is equal to IDy
+        //Returns -1 if IDx is less than IDy
+        //Returns difference if IDx is greater than IDy
         int i = Integer.compare(this.id,o.id);
         if(i==0){
             return 0;

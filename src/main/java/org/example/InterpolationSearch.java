@@ -9,6 +9,8 @@ public class InterpolationSearch<T extends Comparable<T>> implements Runnable {
     private volatile long endTime;
     private volatile long executionTime;
     private int counter;
+    private int left;
+    private int right;
 
     //Constructors
     public InterpolationSearch(List<T> list, T target) {
@@ -23,34 +25,35 @@ public class InterpolationSearch<T extends Comparable<T>> implements Runnable {
     @Override
     public void run() {
         startTime=System.currentTimeMillis();
-        int index =interpolationSearch(list,target);
+        int index =interpolationSearch(list,target,0, list.size()-1);
         endTime=System.currentTimeMillis();
         executionTime=endTime-startTime;
         System.out.println(Thread.currentThread().getName()+":File "+index+" found in "+executionTime+" ms\n");
     }
 
     //Interpolation Search Algorithm
-    public int interpolationSearch(List<T> list, T target) {
-
-        int left = 0;
-        int right = list.size() - 1;
+    public int interpolationSearch(List<T> list, T target,int left, int right) {
         int pos;
-        if(left<=right && target.compareTo(list.get(left))>=0 && target.compareTo(list.get(right))<=0){
+        if(left<=right && target.compareTo(list.get(left))>=0 && target.compareTo(list.get(right))<=0) {
+            //Probing the array which is uniformly distributed to find Target
+            //Formula is derived from y=mx+c whereby array list is linearly distributed
+            // pos = lo + (((hi - lo) / (arr[hi] - arr[lo])) * (x - arr[lo]))
+            pos = left + ( ((right-left) * (target.compareTo(list.get(left))))
+                                /(list.get(right).compareTo(list.get(left)))    );
 
-            //Probing the array which is uniformly distributed
-            pos = left + (((right - left) / (list.get(right).compareTo(list.get(left)))) * (target.compareTo(list.get(left))));
-
-            if (list.get(pos) == target){
+            //Checking if Target Found
+            if (list.get(pos).compareTo(target)==0) {
                 return pos;
-            }/*else if (list.get(pos).compareTo(target) < 0) {
-                left = pos + 1;
-            } else {
-                right = pos - 1;
-            }*/
-
+            }else if (list.get(pos).compareTo(target)<0) {
+                // If target is larger, target is in right sub array
+                return interpolationSearch(list, target, pos + 1, right);
+            }else{
+                // If target is smaller, target is in left sub array
+                return interpolationSearch(list,target,left,pos-1);
+            }
         }
-        return -1; //element not found
 
+        return -1; //Element not found
     }
 
     public List<T> getList() {
@@ -99,5 +102,21 @@ public class InterpolationSearch<T extends Comparable<T>> implements Runnable {
 
     public void setCounter(int counter) {
         this.counter = counter;
+    }
+
+    public int getLeft() {
+        return left;
+    }
+
+    public void setLeft(int left) {
+        this.left = left;
+    }
+
+    public int getRight() {
+        return right;
+    }
+
+    public void setRight(int right) {
+        this.right = right;
     }
 }

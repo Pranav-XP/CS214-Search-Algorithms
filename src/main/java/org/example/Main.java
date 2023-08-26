@@ -28,16 +28,9 @@ public class Main {
         //Times are stored in array list to perform analysis of best,worst and average time taken.
 
         //Data structure to store execution times for analysis
-        List<List<Long>> executionTimes = new ArrayList<>();
-        List<Long> executionTimeLSA = new ArrayList<>();
-        List<Long> executionTimeLSL = new ArrayList<>();
-        List<Long> executionTimeBSA = new ArrayList<>();
-        List<Long> executionTimeBSL = new ArrayList<>();
-        List<Long> executionTimeISA = new ArrayList<>();
-        List<Long> executionTimeISL = new ArrayList<>();
-        List<Long> executionTimeJA = new ArrayList<>();
-        List<Long> executionTimeJL = new ArrayList<>();
+        List<List<Long>> executionTimes;
 
+        //Creating algorithm objects and initialising data structures to be searched
         LinearSearch<Article> LSA = new LinearSearch<>(articleArrayList);
         LinearSearch<Article> LSL = new LinearSearch<>(articleLinkedList);
 
@@ -47,61 +40,23 @@ public class Main {
         InterpolationSearch<Article> ISA = new InterpolationSearch<>(articleArrayList);
         InterpolationSearch<Article> ISL = new InterpolationSearch<>(articleLinkedList);
 
+        JumpSearch<Article> JA = new JumpSearch<>(articleArrayList);
+        JumpSearch<Article> JL = new JumpSearch<>(articleLinkedList);
+
         //Creating 8 threads for each algorithm and running simultaneously 30 times as multithread.
         //Execution times for each run is stored for analysis.
-        for (int i = 0; i < 30; i++) {
-            LSA.setTarget(generateRandomKey(articleArrayList.size()));
-            LSL.setTarget(generateRandomKey(articleLinkedList.size()));
+        executionTimes = startAlgorithms(articleArrayList,articleLinkedList,LSA,LSL,BSA,
+                BSL,ISA,ISL,JA,JL);
 
-            BSA.setTarget(generateRandomKey(articleArrayList.size()));
-            BSL.setTarget(generateRandomKey(articleLinkedList.size()));
-
-            ISA.setTarget(generateRandomKey(articleArrayList.size()));
-            ISL.setTarget(generateRandomKey(articleLinkedList.size()));
-
-            Thread runLSA = new Thread(LSA,"LSA"+i);
-            Thread runLSL = new Thread(LSL,"LSL"+i);
-
-            Thread runBSA = new Thread(BSA,"BSA"+i);
-            Thread runBSL = new Thread(BSL,"BSL"+i);
-
-            Thread runISA = new Thread(ISA,"ISA"+i);
-            Thread runISL = new Thread(ISL,"ISL"+i);
-
-            runLSA.start();
-            runLSL.start();
-
-            runBSA.start();
-            runBSL.start();
-
-            runISA.start();
-            runISL.start();
-
-            try {
-                runLSA.join();
-                runLSL.join();
-                runBSA.join();
-                runBSL.join();
-                runISA.join();
-                runISL.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            executionTimeLSA.add(LSA.getExecutionTime());
-            executionTimeLSL.add(LSL.getExecutionTime());
-            executionTimeBSA.add(BSA.getExecutionTime());
-            executionTimeBSL.add(BSL.getExecutionTime());
-            executionTimeISA.add(ISA.getExecutionTime());
-            executionTimeISL.add(ISL.getExecutionTime());
-        }
-
-        //Performing time analysis
-        timeAnalysis("LSA",executionTimeLSA);
-        timeAnalysis("LSL",executionTimeLSL);
-        timeAnalysis("BSA",executionTimeBSA);
-        timeAnalysis("BSL",executionTimeBSL);
-        timeAnalysis("ISA",executionTimeISA);
-        timeAnalysis("ISL",executionTimeISL);
+        //Performing time analysis on data set corresponding to each algorithm
+        timeAnalysis("Linear Search Array List",executionTimes.get(0));
+        timeAnalysis("Linear Search Linked List",executionTimes.get(1));
+        timeAnalysis("Binary Search Array List",executionTimes.get(2));
+        timeAnalysis("Binary Search Linked List",executionTimes.get(3));
+        timeAnalysis("Interpolation Search Array List",executionTimes.get(4));
+        timeAnalysis("Interpolation Search Linked List",executionTimes.get(5));
+        timeAnalysis("Jump Search Array List",executionTimes.get(6));
+        timeAnalysis("Jump Search Linked List",executionTimes.get(7));
     }
 
     public static List<Article> readFile(String filePath){
@@ -174,5 +129,95 @@ public class Main {
         System.out.println("Worst Time: " + worstTime + " ms\n");
     }
 
+    public static List<List<Long>> startAlgorithms(List<Article> articleArrayList,List<Article> articleLinkedList,
+                                                   LinearSearch<Article> LSA,LinearSearch<Article> LSL,
+                                                   BinarySearch<Article> BSA, BinarySearch<Article> BSL,
+                                                   InterpolationSearch<Article> ISA, InterpolationSearch<Article> ISL,
+                                                   JumpSearch<Article> JA,JumpSearch<Article> JL)
+    {
+        //Data structures to hold execution times for each algorithm
+        List<List<Long>> executionTimes = new ArrayList<>();
+        List<Long> executionTimeLSA = new ArrayList<>();
+        List<Long> executionTimeLSL = new ArrayList<>();
+        List<Long> executionTimeBSA = new ArrayList<>();
+        List<Long> executionTimeBSL = new ArrayList<>();
+        List<Long> executionTimeISA = new ArrayList<>();
+        List<Long> executionTimeISL = new ArrayList<>();
+        List<Long> executionTimeJA = new ArrayList<>();
+        List<Long> executionTimeJL = new ArrayList<>();
+
+
+        //Run each type of algorithm 30 times simultaneously using a new key for all runs
+        for (int i = 0; i < 30; i++) {
+            LSA.setTarget(generateRandomKey(articleArrayList.size()));
+            LSL.setTarget(generateRandomKey(articleLinkedList.size()));
+
+            BSA.setTarget(generateRandomKey(articleArrayList.size()));
+            BSL.setTarget(generateRandomKey(articleLinkedList.size()));
+
+            ISA.setTarget(generateRandomKey(articleArrayList.size()));
+            ISL.setTarget(generateRandomKey(articleLinkedList.size()));
+
+            JA.setTarget(generateRandomKey(articleArrayList.size()));
+            JL.setTarget(generateRandomKey(articleLinkedList.size()));
+
+            Thread runLSA = new Thread(LSA,"LSA"+i);
+            Thread runLSL = new Thread(LSL,"LSL"+i);
+
+            Thread runBSA = new Thread(BSA,"BSA"+i);
+            Thread runBSL = new Thread(BSL,"BSL"+i);
+
+            Thread runISA = new Thread(ISA,"ISA"+i);
+            Thread runISL = new Thread(ISL,"ISL"+i);
+
+            Thread runJA = new Thread(JA,"JA"+i);
+            Thread runJL = new Thread(JL,"JL"+i);
+
+            runLSA.start();
+            runLSL.start();
+
+            runBSA.start();
+            runBSL.start();
+
+            runISA.start();
+            runISL.start();
+
+            runJA.start();
+            runJL.start();
+
+            try {
+                runLSA.join();
+                runLSL.join();
+                runBSA.join();
+                runBSL.join();
+                runISA.join();
+                runISL.join();
+                runJA.join();
+                runJL.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            executionTimeLSA.add(LSA.getExecutionTime());
+            executionTimeLSL.add(LSL.getExecutionTime());
+            executionTimeBSA.add(BSA.getExecutionTime());
+            executionTimeBSL.add(BSL.getExecutionTime());
+            executionTimeISA.add(ISA.getExecutionTime());
+            executionTimeISL.add(ISL.getExecutionTime());
+            executionTimeJA.add(JA.getExecutionTime());
+            executionTimeJL.add(JL.getExecutionTime());
+        }
+        //Collect all Time data into single List
+        executionTimes.add(0,executionTimeLSA);
+        executionTimes.add(1,executionTimeLSL);
+        executionTimes.add(2,executionTimeBSA);
+        executionTimes.add(3,executionTimeBSL);
+        executionTimes.add(4,executionTimeISA);
+        executionTimes.add(5,executionTimeISL);
+        executionTimes.add(6,executionTimeJA);
+        executionTimes.add(7,executionTimeJL);
+
+        return executionTimes;
+
+    }
     }
 
