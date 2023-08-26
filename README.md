@@ -1,9 +1,11 @@
-﻿# Assignment1
+﻿# CS219 Assignment1
 ### Group Members
 * S11171153 Pranav Chand
 * S11209162 Pui Chen
 * S11210082 Aryan Sharma
-<br>
+<br><br>
+
+### CRITICAL: THIS PROGRAM REQUIRES MATLAB ENGINE JAR TO EXECUTE. MATLAB R2023a IS UTILISED.
 
 ### Search Algorithm Functions Implemented
 Each Search Algorithm is implemented in its own class.
