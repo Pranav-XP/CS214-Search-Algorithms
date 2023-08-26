@@ -8,7 +8,6 @@ public class LinearSearch<T extends Comparable<T>> implements Runnable{
     private volatile long startTime;
     private volatile long endTime;
     private volatile long executionTime;
-
     private int counter;
 
     public LinearSearch(List<T> list, T target) {
@@ -26,7 +25,8 @@ public class LinearSearch<T extends Comparable<T>> implements Runnable{
         int index = linearSearch(list,target);
         endTime = System.currentTimeMillis();
         executionTime = endTime-startTime;
-        System.out.println(Thread.currentThread().getName()+":File "+index+" found in "+executionTime+" ms\n");
+        System.out.println(Thread.currentThread().getName()+":File "+index+" found in "+executionTime+" ms after "
+                +counter+" comparisons\n");
     }
 
     //Generic Linear Search algorithm which searches for any User define datatype for both linked list and array list
@@ -35,7 +35,6 @@ public class LinearSearch<T extends Comparable<T>> implements Runnable{
         for(int i = 0; i< list.size();i++){
             counter++;
             if (list.get(i).compareTo(target) == 0){
-                setCounter(counter);
                 return i;
             }
         }

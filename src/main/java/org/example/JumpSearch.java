@@ -25,11 +25,13 @@ public class JumpSearch<T extends Comparable<T>> implements Runnable{
         int index=jumpSearch(list,target);
         endTime = System.currentTimeMillis();
         executionTime = endTime-startTime;
-        System.out.println(Thread.currentThread().getName()+":File "+index+" found in "+executionTime+" ms\n");
+        System.out.println(Thread.currentThread().getName()+":File "+index+" found in "+executionTime+" ms after "
+                +counter+" comparisons\n");
     }
 
     //JumpSearch Algorithm
     public int jumpSearch(List<T> list, T target) {
+        counter=0;
         int n = list.size();
         int step = (int)Math.floor(Math.sqrt(n));
         int prev = 0;
@@ -41,6 +43,7 @@ public class JumpSearch<T extends Comparable<T>> implements Runnable{
             if (prev >= n) {
                 return -1;
             }
+            counter++;
         }
 
         //Linear search within block
@@ -51,6 +54,7 @@ public class JumpSearch<T extends Comparable<T>> implements Runnable{
             if (prev == Math.min(step, n)) {
                 return -1;
             }
+            counter++;
         }
 
         //if element is found

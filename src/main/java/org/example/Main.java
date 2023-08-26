@@ -6,14 +6,18 @@
 
 package org.example;
 
+import com.mathworks.engine.EngineException;
+import com.mathworks.engine.MatlabEngine;
 import com.opencsv.*;
 import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 public class Main {
+    private static MatlabEngine eng;
     public static void main(String[] args) {
         String filePath = Objects.requireNonNull(Main.class.getClassLoader().getResource("Article.csv")).getPath();
         System.out.println(filePath);
@@ -22,12 +26,8 @@ public class Main {
         List<Article> articleLinkedList = new LinkedList<>(readFile(filePath));
         List<Article> articleArrayList = new ArrayList<>(readFile(filePath));
 
-        //ASSIGNMENT QUESTION 3
-        //Creating 30 threads for each algorithm and executing simultaneously
-        //Threads are stored in array list of threads and started at the same time
-        //Times are stored in array list to perform analysis of best,worst and average time taken.
-
-        //Data structure to store execution times for analysis
+        //Data structure to store execution times and counters for analysis
+        List<List<Integer>> counters;
         List<List<Long>> executionTimes;
 
         //Creating algorithm objects and initialising data structures to be searched
@@ -43,6 +43,67 @@ public class Main {
         JumpSearch<Article> JA = new JumpSearch<>(articleArrayList);
         JumpSearch<Article> JL = new JumpSearch<>(articleLinkedList);
 
+        //ASSIGNMENT QUESTION 4 PART 1
+        //QUESTION 4: Run Worse Case Time Complexity Algorithms
+        //y-axis Counter Data Collection
+        counters=worstCaseStart(articleArrayList,articleLinkedList,LSA,BSA,ISA,JA);
+        List<Integer> countersLSA = new ArrayList<>(counters.get(0));
+        List<Integer> countersBSA = new ArrayList<>(counters.get(1));
+        List<Integer> countersISA = new ArrayList<>(counters.get(2));
+        List<Integer> countersJA = new ArrayList<>(counters.get(3));
+
+
+        //CREATING GRAPHS USING MATLAB ENGINE
+        //Creating x-axis line spacing
+        int[] x = new int[articleArrayList.size()];
+        for(int i=0;i<articleArrayList.size();i++){
+            x[i]=i;
+        }
+
+        int[] y1 = new int[articleArrayList.size()];
+        int[] y2 = new int[articleArrayList.size()];
+        int[] y3 = new int[articleArrayList.size()];
+        int[] y4 = new int[articleArrayList.size()];
+        for (int i = 0; i < articleArrayList.size(); i++) {
+            y1[i] = countersLSA.get(i);
+            y2[i] = countersBSA.get(i);
+            y3[i] = countersISA.get(i);
+            y4[i] = countersJA.get(i);
+        }
+
+        //Start MATLAB ENGINE API
+        try {
+            eng = MatlabEngine.startMatlab();
+
+            //Pass Data to MATLAB and plot Line Charts
+            eng.putVariable("x",x);
+            eng.putVariable("y1",y1);
+            eng.putVariable("y2",y2);
+            eng.putVariable("y3",y3);
+            eng.putVariable("y4",y4);
+
+            //MATLAB code to plot chart
+            eng.eval("plot(x, y1,'b', 'DisplayName', 'Linear Search'),xlabel('Input Size'),ylabel('Operations'),title('Worst Case Time Complexity');");
+            eng.eval("hold on;");
+            eng.eval("plot(x, y2,'r', 'DisplayName', 'Binary Search');");
+            eng.eval("plot(x, y3,'y', 'DisplayName', 'Interpolation Search');");
+            eng.eval("plot(x, y4,'g', 'DisplayName', 'Jump Search');");
+            eng.eval("hold off;");
+            eng.eval("legend;");
+
+            eng.eval("uiwait(gcf);");
+
+            eng.close();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        //ASSIGNMENT QUESTION 3
+        //Creating 30 threads for each algorithm and executing simultaneously
+        //Threads are stored in array list of threads and started at the same time
+        //Times are stored in array list to perform analysis of best,worst and average time taken.
+
         //Creating 8 threads for each algorithm and running simultaneously 30 times as multithread.
         //Execution times for each run is stored for analysis.
         executionTimes = startAlgorithms(articleArrayList,articleLinkedList,LSA,LSL,BSA,
@@ -57,6 +118,7 @@ public class Main {
         timeAnalysis("Interpolation Search Linked List",executionTimes.get(5));
         timeAnalysis("Jump Search Array List",executionTimes.get(6));
         timeAnalysis("Jump Search Linked List",executionTimes.get(7));
+
     }
 
     public static List<Article> readFile(String filePath){
@@ -97,7 +159,7 @@ public class Main {
     }
 
     private static Article generateRandomKey(int max) {
-        //Generate an Article with random ID which may or may not exist to act as the key
+        //Generates an Article with random ID which may or may not exist to act as the key
         //Between 0(inclusive) and maximum+1000(exclusive), inorder to simulate keys which may not exist
         int min = 0;
         max = max + 10000; //To generate 10000 keys which do not exist.
@@ -105,6 +167,7 @@ public class Main {
         return new Article( r.nextInt((max - min) + 1) + min);
     }
 
+    //Method to find best, worst and average empirical time analysis for each algorithm execution times
     public static void timeAnalysis(String analysisName, List<Long> executionTimes){
         // Calculate time metrics
         long totalExecutionTime = 0;
@@ -129,12 +192,16 @@ public class Main {
         System.out.println("Worst Time: " + worstTime + " ms\n");
     }
 
+    //Method to start 8 threads for each algorithm and run 30 times
     public static List<List<Long>> startAlgorithms(List<Article> articleArrayList,List<Article> articleLinkedList,
                                                    LinearSearch<Article> LSA,LinearSearch<Article> LSL,
                                                    BinarySearch<Article> BSA, BinarySearch<Article> BSL,
                                                    InterpolationSearch<Article> ISA, InterpolationSearch<Article> ISL,
                                                    JumpSearch<Article> JA,JumpSearch<Article> JL)
     {
+        System.out.println("-------------------------------------------------------");
+        System.out.println("           EMPIRICAL TIME ANALYSIS BEGINNING           ");
+        System.out.println("-------------------------------------------------------\n");
         //Data structures to hold execution times for each algorithm
         List<List<Long>> executionTimes = new ArrayList<>();
         List<Long> executionTimeLSA = new ArrayList<>();
@@ -145,7 +212,6 @@ public class Main {
         List<Long> executionTimeISL = new ArrayList<>();
         List<Long> executionTimeJA = new ArrayList<>();
         List<Long> executionTimeJL = new ArrayList<>();
-
 
         //Run each type of algorithm 30 times simultaneously using a new key for all runs
         for (int i = 0; i < 30; i++) {
@@ -217,7 +283,69 @@ public class Main {
         executionTimes.add(7,executionTimeJL);
 
         return executionTimes;
-
     }
+
+    //Runs ALGORITHMS under Worst Case Condition
+    public static List<List<Integer>> worstCaseStart(List<Article> articleArrayList,List<Article> articleLinkedList,
+                                                   LinearSearch<Article> LSA,
+                                                   BinarySearch<Article> BSA,
+                                                   InterpolationSearch<Article> ISA,
+                                                   JumpSearch<Article> JA)
+    {
+        //Data structures to hold execution times for each algorithm
+        List<List<Integer>> counters = new ArrayList<>();
+        List<Integer> countersLSA = new ArrayList<>();
+        List<Integer> countersBSA = new ArrayList<>();
+        List<Integer> countersISA = new ArrayList<>();
+        List<Integer> countersJA = new ArrayList<>();
+
+
+        //Run each type of algorithm 30 times simultaneously using a new key for all runs
+        for (int i = 0; i < articleArrayList.size(); i++) {
+
+            LSA.setTarget(new Article(i));
+            BSA.setTarget(new Article(i));
+            ISA.setTarget(new Article(i));
+            JA.setTarget(new Article(i));
+
+
+            Thread runLSA = new Thread(LSA,"LSA"+i);
+            Thread runBSA = new Thread(BSA,"BSA"+i);
+            Thread runISA = new Thread(ISA,"ISA"+i);
+            Thread runJA = new Thread(JA,"JA"+i);
+
+
+            runLSA.start();
+            runBSA.start();
+            runISA.start();
+            runJA.start();
+
+
+            try {
+                runLSA.join();
+                runBSA.join();
+                runISA.join();
+                runJA.join();
+
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            countersLSA.add(LSA.getCounter());
+            countersBSA.add(BSA.getCounter());
+            countersISA.add(ISA.getCounter());
+            countersJA.add(JA.getCounter());
+        }
+        //Collect all Time data into single List
+        counters.add(0,countersLSA);
+        counters.add(1,countersBSA);
+        counters.add(2,countersISA);
+        counters.add(3,countersJA);
+
+        System.out.println("-------------------------------------------------------");
+        System.out.println("WORST CASE TIME COMPLEXITY RUN COMPLETED SUCCESSFULLY!");
+        System.out.println("-------------------------------------------------------\n");
+        return counters;
+    }
+    //EOF MAIN
     }
 

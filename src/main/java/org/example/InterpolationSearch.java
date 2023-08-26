@@ -28,11 +28,13 @@ public class InterpolationSearch<T extends Comparable<T>> implements Runnable {
         int index =interpolationSearch(list,target,0, list.size()-1);
         endTime=System.currentTimeMillis();
         executionTime=endTime-startTime;
-        System.out.println(Thread.currentThread().getName()+":File "+index+" found in "+executionTime+" ms\n");
+        System.out.println(Thread.currentThread().getName()+":File "+index+" found in "+executionTime+" ms after "
+                +counter+" comparisons\n");
     }
 
     //Interpolation Search Algorithm
     public int interpolationSearch(List<T> list, T target,int left, int right) {
+        counter=0;
         int pos;
         if(left<=right && target.compareTo(list.get(left))>=0 && target.compareTo(list.get(right))<=0) {
             //Probing the array which is uniformly distributed to find Target
@@ -41,6 +43,7 @@ public class InterpolationSearch<T extends Comparable<T>> implements Runnable {
             pos = left + ( ((right-left) * (target.compareTo(list.get(left))))
                                 /(list.get(right).compareTo(list.get(left)))    );
 
+            counter++;
             //Checking if Target Found
             if (list.get(pos).compareTo(target)==0) {
                 return pos;

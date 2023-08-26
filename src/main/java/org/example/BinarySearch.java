@@ -21,12 +21,14 @@ public class BinarySearch<T extends Comparable<T>> implements Runnable {
 
     //Iterative Binary Search Algorithm
     public int binarySearch(List<T> list, T key) {
+        counter=0;
         int left = 0;
         int right = list.size() - 1;
 
         while (left <= right) {
             int mid = left + (right - left) / 2;
             int comparisonResult = list.get(mid).compareTo(key);
+            counter++;
 
             if (comparisonResult == 0) {
                 return mid;
@@ -46,7 +48,9 @@ public class BinarySearch<T extends Comparable<T>> implements Runnable {
         int index = binarySearch(list,target);
         endTime = System.currentTimeMillis();
         executionTime = endTime - startTime;
-        System.out.println(Thread.currentThread().getName()+":File "+index+" found in "+executionTime+" ms\n");
+        System.out.println(Thread.currentThread().getName()+":File "+index+" found in "+executionTime+" ms after "
+                +counter+" comparisons\n");
+
     }
 
     public List<T> getList() {
