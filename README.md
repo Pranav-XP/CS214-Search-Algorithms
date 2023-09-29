@@ -23,11 +23,13 @@ Searches for element in predefined blocks of the list. If element is not in one 
 1. **Random Key Generator**<br>
 Returns an Article with randomly generated ID to represent the target to be searched.
 2. **Multithread functions**<br>
-Two multithread functions are implemented, for empirical analysis and for worst case analysis respectfully. The function instantiates 8 threads for each algorithm and runs them simultaneously 30 times.
+Two multithread functions are implemented, for empirical analysis and for worst case analysis respectfully. The function instantiates 8 threads for each algorithm and runs them simultaneously 30 times.<br>//Creates 8 threads for each algorithm and executing simultaneously
+   //Threads are stored in array list of threads and started at the same time
+   //Times are stored in array list to perform analysis of best,worst and average time taken.
 3. **Time Analysis**<br>
 Reads execution time for each algorithm and outputs the best, worst and average time.
 4. **Read File**<br>
-CSV file is read using OpenCSV library. A Custom Parser is implemented using ParserBuilder() and the files are read into Array List and Linked List.
+CSV file is read using OpenCSV library. A Custom Parser is implemented using ParserBuilder() and the files are read into Array List and Linked List. Please note 3 changes are made to the CSV files inorder for Parser to function.
 <br>
 
 ### MATLAB Engine API
